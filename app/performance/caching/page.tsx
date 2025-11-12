@@ -110,7 +110,7 @@ webhook.on('project.updated', (event) => {
 
 *Learn more about [Performance Optimization](/performance/optimization).*`
 
-export default function CachingPage() {
+export default async function CachingPage() {
   return <MDXContent source={content} />
 }
 

@@ -98,7 +98,7 @@ app.post('/projects',
 
 *Review [Authentication](/security/authentication) for authentication methods.*`
 
-export default function SecurityAuthorizationPage() {
+export default async function SecurityAuthorizationPage() {
   return <MDXContent source={content} />
 }
 

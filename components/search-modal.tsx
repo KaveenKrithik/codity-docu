@@ -7,22 +7,19 @@ import Fuse from 'fuse.js'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
-// Sample documentation data - replace with your actual content
+// Documentation data from Codity's actual documentation
 const docs = [
-  { title: 'Introduction', href: '/', content: 'Welcome to Codity documentation' },
-  { title: 'Quick Start', href: '/getting-started', content: 'Get started with Codity in minutes' },
-  { title: 'Installation', href: '/installation', content: 'Install and configure Codity' },
+  { title: 'Introduction', href: '/documentation', content: 'Welcome to Codity documentation' },
+  { title: 'Getting Started', href: '/getting-started', content: 'Get started with Codity by connecting repositories and configuring settings' },
+  { title: 'PR Reviews', href: '/guides/pr-reviews', content: 'Learn how Codity helps streamline your Pull Request and Merge Request review process' },
+  { title: 'JIRA Integration', href: '/guides/jira-integration', content: 'Connect JIRA to automatically extract ticket requirements and verify acceptance criteria' },
+  { title: 'Code Navigation', href: '/guides/code-navigation', content: 'AI-powered codebase assistant for understanding code and finding implementations' },
+  { title: 'Best Practices', href: '/guides/best-practices', content: 'Recommended practices for using Codity effectively' },
+  { title: 'Troubleshooting', href: '/guides/troubleshooting', content: 'Common issues and solutions when using Codity' },
   { title: 'API Overview', href: '/api', content: 'Complete API reference guide' },
   { title: 'Authentication', href: '/api/authentication', content: 'Learn how to authenticate API requests' },
   { title: 'Endpoints', href: '/api/endpoints', content: 'All available API endpoints' },
   { title: 'Webhooks', href: '/api/webhooks', content: 'Set up and manage webhooks' },
-  { title: 'Best Practices', href: '/guides/best-practices', content: 'Recommended practices for using Codity' },
-  { title: 'Troubleshooting', href: '/guides/troubleshooting', content: 'Common issues and solutions' },
-  { title: 'Performance Optimization', href: '/performance/optimization', content: 'Optimize your Codity implementation' },
-  { title: 'Caching', href: '/performance/caching', content: 'Implement caching strategies' },
-  { title: 'Database Schema', href: '/database/schema', content: 'Database structure and relationships' },
-  { title: 'Migrations', href: '/database/migrations', content: 'Database migration guide' },
-  { title: 'Security Overview', href: '/security', content: 'Security best practices' },
 ]
 
 const fuse = new Fuse(docs, {
@@ -85,9 +82,9 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
             exit={{ opacity: 0, scale: 0.95, y: -20 }}
             className="fixed top-20 left-1/2 -translate-x-1/2 w-full max-w-2xl z-50"
           >
-            <div className="bg-card border border-border rounded-xl shadow-2xl overflow-hidden">
+            <div className="bg-background/95 backdrop-blur-xl border border-border/50 rounded-2xl shadow-2xl overflow-hidden">
               {/* Search input */}
-              <div className="flex items-center px-4 border-b border-border">
+              <div className="flex items-center px-5 border-b border-border/50 bg-secondary/20">
                 <Search className="h-5 w-5 text-muted-foreground mr-3" />
                 <input
                   type="text"
@@ -116,7 +113,7 @@ export function SearchModal({ isOpen, onClose }: SearchModalProps) {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.05 }}
                         onClick={() => handleSelect(result.item.href)}
-                        className="w-full flex items-center justify-between px-4 py-3 rounded-lg hover:bg-muted transition-colors text-left group"
+                        className="w-full flex items-center justify-between px-5 py-3.5 rounded-xl hover:bg-secondary/50 transition-all text-left group border border-transparent hover:border-border/30 hover:shadow-sm"
                       >
                         <div className="flex items-center space-x-3">
                           <FileText className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />

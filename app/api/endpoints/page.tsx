@@ -110,7 +110,7 @@ Content-Type: application/json
 
 *For authentication details, see [Authentication](/api/authentication).*`
 
-export default function EndpointsPage() {
+export default async function EndpointsPage() {
   return <MDXContent source={content} />
 }
 

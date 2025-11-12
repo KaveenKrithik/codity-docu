@@ -24,7 +24,7 @@ Codity uses a modern, scalable database architecture designed for performance an
 
 *Start with [Schema](/database/schema) to understand the structure.*`
 
-export default function DatabasePage() {
+export default async function DatabasePage() {
   return <MDXContent source={content} />
 }
 

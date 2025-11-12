@@ -24,7 +24,7 @@ Codity is designed for high performance, but following best practices can help y
 
 *Learn more about [Optimization](/performance/optimization).*`
 
-export default function PerformancePage() {
+export default async function PerformancePage() {
   return <MDXContent source={content} />
 }
 

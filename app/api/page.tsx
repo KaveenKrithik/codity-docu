@@ -85,7 +85,7 @@ Errors are returned with appropriate HTTP status codes:
 
 *For detailed endpoint documentation, see [Endpoints](/api/endpoints).*`
 
-export default function APIPage() {
+export default async function APIPage() {
   return <MDXContent source={content} />
 }
 

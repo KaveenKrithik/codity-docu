@@ -3,7 +3,7 @@
 import { Navbar } from '@/components/navbar'
 import { Sidebar } from '@/components/sidebar'
 
-export default function DocsLayout({
+export default function DatabaseLayout({
   children,
 }: {
   children: React.ReactNode

@@ -64,7 +64,7 @@ CREATE INDEX idx_projects_created_at ON projects(created_at);
 
 *Learn about [Migrations](/database/migrations) to manage schema changes.*`
 
-export default function SchemaPage() {
+export default async function SchemaPage() {
   return <MDXContent source={content} />
 }
 

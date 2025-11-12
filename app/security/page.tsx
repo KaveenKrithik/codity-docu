@@ -28,7 +28,7 @@ Security is a top priority at Codity. Follow these guidelines to keep your imple
 
 *Start with [Authentication](/security/authentication).*`
 
-export default function SecurityPage() {
+export default async function SecurityPage() {
   return <MDXContent source={content} />
 }
 

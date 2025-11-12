@@ -121,7 +121,7 @@ If you're still experiencing issues:
 
 *For more information, see our [API Documentation](/api).*`
 
-export default function TroubleshootingPage() {
+export default async function TroubleshootingPage() {
   return <MDXContent source={content} />
 }
 

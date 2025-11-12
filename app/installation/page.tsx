@@ -91,7 +91,7 @@ client.health.check()
 
 *Having issues? Check our [Troubleshooting Guide](/guides/troubleshooting).*`
 
-export default function InstallationPage() {
+export default async function InstallationPage() {
   return <MDXContent source={content} />
 }
 

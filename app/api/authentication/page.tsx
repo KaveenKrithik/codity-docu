@@ -66,7 +66,7 @@ Regularly rotate your API keys for security:
 
 *Learn more about [Security](/security) practices.*`
 
-export default function AuthenticationPage() {
+export default async function AuthenticationPage() {
   return <MDXContent source={content} />
 }
 

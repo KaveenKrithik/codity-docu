@@ -102,7 +102,7 @@ Codity will retry failed webhook deliveries:
 
 *Learn more about [API Endpoints](/api/endpoints).*`
 
-export default function WebhooksPage() {
+export default async function WebhooksPage() {
   return <MDXContent source={content} />
 }
 

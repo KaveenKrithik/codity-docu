@@ -114,7 +114,7 @@ const projects = await client.projects.batchGet(ids)
 
 *For troubleshooting, see our [Troubleshooting Guide](/guides/troubleshooting).*`
 
-export default function BestPracticesPage() {
+export default async function BestPracticesPage() {
   return <MDXContent source={content} />
 }
 

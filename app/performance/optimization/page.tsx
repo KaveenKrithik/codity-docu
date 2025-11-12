@@ -134,7 +134,7 @@ const client = new CodityClient({
 
 *Learn about [Caching](/performance/caching) strategies.*`
 
-export default function OptimizationPage() {
+export default async function OptimizationPage() {
   return <MDXContent source={content} />
 }
 

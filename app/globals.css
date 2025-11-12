@@ -4,40 +4,42 @@
 
 @layer base {
   :root {
+    /* Light mode - fallback */
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
-    --primary: 221.2 83.2% 53.3%;
-    --primary-foreground: 210 40% 98%;
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 221.2 83.2% 53.3%;
+    --card-foreground: 0 0% 3.9%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 217 91% 60%;
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-    --primary: 217.2 91.2% 59.8%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 224.3 76.3% 48%;
+    /* Codity.ai exact theme - dark background with bright blue accents */
+    --background: 0 0% 0%;
+    --foreground: 0 0% 100%;
+    --card: 0 0% 0%;
+    --card-foreground: 0 0% 100%;
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 0 0% 15%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 15%;
+    --accent-foreground: 0 0% 98%;
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 217 91% 60%;
   }
 }
 
@@ -64,9 +66,10 @@
 /* Smooth scrolling */
 html {
   scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
 }
 
-/* Custom scrollbar */
+/* Custom scrollbar - sleek minimal design */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -78,6 +81,7 @@ html {
 
 ::-webkit-scrollbar-thumb {
   @apply bg-muted-foreground/20 rounded-full;
+  transition: background 0.2s;
 }
 
 ::-webkit-scrollbar-thumb:hover {
@@ -102,66 +106,189 @@ pre code {
   @apply no-underline hover:underline;
 }
 
-/* MDX content styles */
+/* MDX content styles - Sleek and modern */
 .prose {
   @apply max-w-none;
 }
 
 .prose h1 {
-  @apply text-4xl font-bold mb-6 mt-8;
+  @apply text-5xl font-bold mb-10 mt-0 tracking-tight;
+  background: linear-gradient(135deg, hsl(var(--foreground)) 0%, hsl(var(--foreground) / 0.9) 50%, hsl(var(--primary)) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  @apply relative;
+}
+
+.prose h1::after {
+  content: '';
+  @apply absolute bottom-0 left-0 w-24 h-1 bg-gradient-to-r from-primary to-primary/0 rounded-full;
 }
 
 .prose h2 {
-  @apply text-3xl font-semibold mb-4 mt-8 border-b border-border pb-2;
+  @apply text-3xl font-semibold mb-8 mt-16 tracking-tight first:mt-0 text-foreground;
+  @apply pb-3 border-b-2 border-border/30 relative;
+}
+
+.prose h2::before {
+  content: '';
+  @apply absolute bottom-0 left-0 w-16 h-0.5 bg-primary rounded-full;
 }
 
 .prose h3 {
-  @apply text-2xl font-semibold mb-3 mt-6;
+  @apply text-2xl font-semibold mb-5 mt-10 tracking-tight text-foreground;
+  @apply relative pl-4;
+}
+
+.prose h3::before {
+  content: '';
+  @apply absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-full;
 }
 
 .prose h4 {
-  @apply text-xl font-semibold mb-2 mt-4;
+  @apply text-lg font-semibold mb-3 mt-6 tracking-tight text-foreground;
 }
 
 .prose p {
-  @apply mb-4 leading-7;
+  @apply mb-6 leading-7 text-foreground/90;
 }
 
 .prose ul,
 .prose ol {
-  @apply mb-4 ml-6;
+  @apply mb-6 ml-6 space-y-3;
 }
 
 .prose li {
+  @apply leading-7 text-foreground/90;
+  @apply relative;
+}
+
+.prose ul li::marker {
+  @apply text-primary;
+}
+
+.prose ol li::marker {
+  @apply text-primary font-semibold;
+}
+
+.prose li > p {
   @apply mb-2;
 }
 
 .prose a {
-  @apply text-primary hover:underline;
+  @apply text-primary underline underline-offset-4 decoration-primary/50 hover:decoration-primary transition-all;
+  @apply font-medium;
+}
+
+.prose a:hover {
+  @apply text-primary/90;
 }
 
 .prose code {
-  @apply bg-muted px-1.5 py-0.5 rounded text-sm font-mono;
+  @apply bg-secondary/80 px-2.5 py-1 rounded-lg text-sm font-mono text-foreground;
+  @apply border border-border/40 shadow-sm;
+  @apply before:content-[''] after:content-[''];
 }
 
 .prose pre {
-  @apply bg-muted/50 border border-border;
+  @apply bg-secondary/60 border border-border/50 rounded-2xl p-6 overflow-x-auto mb-10;
+  @apply shadow-xl shadow-black/10;
+  @apply relative backdrop-blur-sm;
+}
+
+.prose pre::before {
+  content: '';
+  @apply absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary/60 via-primary to-primary/60 rounded-t-2xl;
+  @apply shadow-lg shadow-primary/20;
+}
+
+.prose pre code {
+  @apply bg-transparent p-0 text-sm border-0;
+  @apply text-foreground/95;
 }
 
 .prose blockquote {
-  @apply border-l-4 border-primary pl-4 italic my-4;
+  @apply border-l-4 border-primary/60 pl-8 italic my-10 text-foreground/85;
+  @apply bg-gradient-to-r from-primary/5 via-secondary/20 to-transparent py-5 pr-6 rounded-r-xl;
+  @apply relative shadow-sm;
+}
+
+.prose blockquote::before {
+  content: '"';
+  @apply absolute -left-3 -top-1 text-5xl text-primary/20 font-serif leading-none;
 }
 
 .prose table {
-  @apply w-full border-collapse my-4;
+  @apply w-full border-collapse my-10 rounded-xl overflow-hidden;
+  @apply border border-border/50 shadow-lg;
 }
 
 .prose th,
 .prose td {
-  @apply border border-border px-4 py-2;
+  @apply border border-border px-4 py-3 text-left;
 }
 
 .prose th {
-  @apply bg-muted font-semibold;
+  @apply bg-gradient-to-b from-secondary to-secondary/80 font-semibold text-foreground;
+  @apply border-b-2 border-border;
+}
+
+.prose td {
+  @apply text-foreground/90;
+}
+
+.prose hr {
+  @apply my-10 border-border/50;
+  @apply relative;
+}
+
+.prose hr::after {
+  content: '';
+  @apply absolute left-1/2 -translate-x-1/2 -top-1 w-12 h-0.5 bg-primary rounded-full;
+}
+
+.prose strong {
+  @apply font-semibold text-foreground;
+}
+
+.prose em {
+  @apply italic text-foreground/90;
+}
+
+/* Enhanced visual elements */
+.prose img {
+  @apply rounded-xl border border-border/50 shadow-xl my-8 transition-all hover:shadow-2xl hover:scale-[1.01];
+}
+
+.prose figure {
+  @apply my-10;
+}
+
+.prose figcaption {
+  @apply text-sm text-muted-foreground mt-3 text-center;
+}
+
+
+/* Enhanced focus states */
+.prose a:focus-visible,
+.prose button:focus-visible,
+.prose code:focus-visible {
+  @apply outline-2 outline-primary outline-offset-2 rounded;
+}
+
+/* Subtle animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.prose > * {
+  animation: fadeInUp 0.3s ease-out;
 }
 

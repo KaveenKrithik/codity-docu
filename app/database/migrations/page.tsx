@@ -98,7 +98,7 @@ exports.down = async (db) => {
 
 *Review the [Schema](/database/schema) to understand the structure.*`
 
-export default function MigrationsPage() {
+export default async function MigrationsPage() {
   return <MDXContent source={content} />
 }
 

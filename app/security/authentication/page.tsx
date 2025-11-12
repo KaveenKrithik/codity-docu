@@ -96,7 +96,7 @@ class TokenManager {
 
 *Learn about [Authorization](/security/authorization) for access control.*`
 
-export default function SecurityAuthenticationPage() {
+export default async function SecurityAuthenticationPage() {
   return <MDXContent source={content} />
 }
 

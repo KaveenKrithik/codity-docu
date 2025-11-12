@@ -21,7 +21,7 @@ If you can't find what you're looking for:
 
 *Start with [Best Practices](/guides/best-practices) to learn recommended patterns.*`
 
-export default function GuidesPage() {
+export default async function GuidesPage() {
   return <MDXContent source={content} />
 }
 
