@@ -1,5 +1,5 @@
 import { serialize } from 'next-mdx-remote/serialize'
-import { MDXRemoteClient } from '@/components/mdx-client'
+import { MDXRemoteClient } from '../components/mdx-client'
 
 export async function MDXContent({ source }: { source: string }) {
   const mdxSource = await serialize(source, {

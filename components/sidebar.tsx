@@ -128,7 +128,7 @@ export function Sidebar() {
       {/* Sidebar */}
       <aside
         className={cn(
-          'fixed lg:sticky top-14 left-0 h-[calc(100vh-3.5rem)] w-64 z-40 border-r border-border bg-background overflow-y-auto',
+          'fixed lg:sticky top-14 left-0 h-[calc(100vh-3.5rem)] w-56 z-40 border-r border-border bg-background overflow-y-auto',
           'lg:block',
           isMobileOpen ? 'block' : 'hidden'
         )}
