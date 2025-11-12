@@ -6,7 +6,8 @@ import { MDXPreview } from '@/components/mdx-preview'
 
 interface MDXFile {
   id: string
-  slug: string
+  slug?: string
+  path?: string // Legacy support for old files
   title: string
   content: string
   lastModified: string
@@ -93,10 +94,12 @@ export default function AdminPage() {
     setIsPreviewModalOpen(true)
   }
 
-  const filteredFiles = files.filter((file) =>
-    file.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    file.slug.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  const filteredFiles = files.filter((file) => {
+    const title = file.title?.toLowerCase() || ''
+    const slug = (file.slug || file.path || '').toLowerCase()
+    const query = searchQuery.toLowerCase()
+    return title.includes(query) || slug.includes(query)
+  })
 
   return (
     <div className="space-y-8">
@@ -147,7 +150,7 @@ export default function AdminPage() {
                 <h3 className="font-semibold text-foreground text-lg">{file.title}</h3>
               </div>
             </div>
-            <p className="text-xs text-muted-foreground mb-4 font-mono bg-secondary/30 px-2 py-1 rounded border border-border/20 inline-block">{file.slug}</p>
+            <p className="text-xs text-muted-foreground mb-4 font-mono bg-secondary/30 px-2 py-1 rounded border border-border/20 inline-block">{file.slug || file.path || 'N/A'}</p>
             <p className="text-sm text-muted-foreground mb-5 line-clamp-3 leading-relaxed">
               {file.content.substring(0, 120)}...
             </p>
