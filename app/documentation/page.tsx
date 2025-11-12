@@ -18,12 +18,12 @@ To enable PR review insights and automation, you first need to connect your repo
 2. Navigate to the **Dashboard**.
 3. Click on the **"Add GitHub Repositories"** button.
 
-![Add GitHub Repositories button](placeholder)
+![Add GitHub Repositories button](/fig1.png)
 **Figure 1:** Click the "Add GitHub Repositories" button on the Dashboard.
 
 4. Follow the prompts to install the Codity GitHub App for your desired repositories or organization.
 
-![GitHub App installation](placeholder)
+![GitHub App installation](/fig2.png)
 
 **Figure 2:** Authorize and install the Codity GitHub App.
 
@@ -31,20 +31,20 @@ To enable PR review insights and automation, you first need to connect your repo
 
 1. First, you need to provide a GitLab Access Token to Codity. This is required for Codity to interact with your GitLab instance. You can set this up in your Codity **Settings** or if prompted on the dashboard.
 
-![GitLab Access Token modal](placeholder)
+![GitLab Access Token modal](/fig3.png)
 
 **Figure 3:** Enter your GitLab Access Token in the modal.
 
 2. Once the token is added, navigate to the **Dashboard**.
 3. Click on the **"Enable Repositories"** button.
 
-![Enable Repositories button](placeholder)
+![Enable Repositories button](/fig4.png)
 
 **Figure 4:** Click the "Enable Repositories" button on the Dashboard.
 
 4. Select the GitLab repositories you wish to monitor.
 
-![GitLab repository selection](placeholder)
+![GitLab repository selection](/fig5.png)
 
 **Figure 5:** Select the GitLab repositories to enable Codity for.
 
@@ -56,7 +56,7 @@ Codity provides several customization options in the **Settings** page to tailor
 
 Control whether Codity automatically reviews your PRs/MRs when they are opened or updated.
 
-![Auto-Review setting](placeholder)
+![Auto-Review setting](/fig6.png)
 
 **Figure 6:** Toggle Auto-Review ON/OFF in Codity Settings.
 
@@ -68,7 +68,7 @@ Control whether Codity automatically reviews your PRs/MRs when they are opened o
 @codity review
 \`\`\`
 
-![Manual review comment](placeholder)
+![Manual review comment](/fig7.png)
 
 **Figure 7:** Example of using \`@codity review\` in a PR comment.
 
@@ -104,7 +104,7 @@ Connect your JIRA instance to Codity to automatically extract ticket requirement
 3. Give your token a label (e.g., "Codity Integration")
 4. Copy the generated token - you'll need this in the next step
 
-![JIRA API token generation](placeholder)
+![JIRA API token generation](/fig9.png)
 
 **Figure 9:** Generate a JIRA API token from your Atlassian account settings.
 
@@ -151,7 +151,7 @@ Codity's Code Navigation feature is your AI-powered codebase assistant that help
 
 You can start using code navigation by clicking on the tab on the dashboard sidebar or In any of your PR/MR comments (or even on Issues and Commits for GitLab), simply mention \`@codity\` followed by your question. Codity will analyze your codebase and provide contextual answers.
 
-![Code navigation UI](placeholder)
+![Code navigation UI](/fig10.png)
 
 **Figure 10:** Start talking to your code base by selecting a repo.
 
@@ -228,7 +228,7 @@ When you reply to existing comment threads (including diff comments), Codity aut
 - **GitHub:** Pull Request comments (general and review comments)
 - **GitLab:** Merge Request comments, Issue comments, and Commit comments
 
-![Code Navigation in action](placeholder)
+![Code Navigation in action](/fig11.png)
 
 **Figure 11:** An example of Codity's response to a code navigation query.
 
@@ -245,5 +245,5 @@ When you reply to existing comment threads (including diff comments), Codity aut
 *Need help? Contact our support team or check out our [Troubleshooting Guide](/guides/troubleshooting).*`
 
 export default async function DocumentationPage() {
-  return <MDXContent source={content} />
+   return await MDXContent({ source: content });
 }

@@ -13,7 +13,7 @@ export default function DocumentationLayout({
       <Navbar />
       <div className="flex">
         <Sidebar />
-        <main className="flex-1 lg:ml-64">
+        <main className="flex-1 lg:ml-56">
           <div className="max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
             <article className="prose prose-lg dark:prose-invert max-w-none">
               {children}
