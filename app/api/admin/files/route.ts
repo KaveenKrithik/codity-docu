@@ -1,69 +1,42 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { readFile, writeFile, mkdir } from 'fs/promises'
-import { join } from 'path'
-import { existsSync } from 'fs'
+import { fetchAllDocs, uploadDoc, downloadMdxContent } from '@/lib/docOperations'
 
-const DATA_DIR = join(process.cwd(), 'data')
-const FILES_JSON = join(DATA_DIR, 'mdx-files.json')
-
-// Ensure data directory exists
-async function ensureDataDir() {
-  try {
-    if (!existsSync(DATA_DIR)) {
-      await mkdir(DATA_DIR, { recursive: true })
-    }
-  } catch (error) {
-    console.error('Failed to create data directory:', error)
-  }
-}
-
-// Read files from JSON
-async function readFiles() {
-  try {
-    await ensureDataDir()
-    if (existsSync(FILES_JSON)) {
-      const data = await readFile(FILES_JSON, 'utf-8')
-      return JSON.parse(data)
-    }
-    // Return initial mock data if file doesn't exist
-    return [
-      {
-        id: '1',
-        slug: '/documentation',
-        title: 'Documentation',
-        content: '# Documentation\n\nWelcome to Codity Documentation.',
-        lastModified: new Date().toISOString(),
-      },
-      {
-        id: '2',
-        slug: '/getting-started',
-        title: 'Getting Started',
-        content: '# Getting Started\n\nGet up and running with Codity.',
-        lastModified: new Date().toISOString(),
-      },
-    ]
-  } catch (error) {
-    console.error('Failed to read files:', error)
-    return []
-  }
-}
-
-// Write files to JSON
-async function writeFiles(files: any[]) {
-  try {
-    await ensureDataDir()
-    await writeFile(FILES_JSON, JSON.stringify(files, null, 2), 'utf-8')
-  } catch (error) {
-    console.error('Failed to write files:', error)
-    throw error
-  }
-}
-
+/**
+ * GET /api/admin/files
+ * Fetch all documents from Supabase
+ */
 export async function GET() {
   try {
-    const files = await readFiles()
-    return NextResponse.json(files)
+    const docs = await fetchAllDocs()
+    
+    // Fetch content for each doc
+    const docsWithContent = await Promise.all(
+      docs.map(async (doc) => {
+        try {
+          const content = await downloadMdxContent(doc.file_path)
+          return {
+            id: doc.id,
+            slug: doc.slug,
+            title: doc.title,
+            content,
+            lastModified: doc.updated_at,
+          }
+        } catch (error) {
+          console.error(`Failed to fetch content for ${doc.slug}:`, error)
+          return {
+            id: doc.id,
+            slug: doc.slug,
+            title: doc.title,
+            content: '',
+            lastModified: doc.updated_at,
+          }
+        }
+      })
+    )
+    
+    return NextResponse.json(docsWithContent)
   } catch (error) {
+    console.error('GET /api/admin/files error:', error)
     return NextResponse.json(
       { error: 'Failed to load files' },
       { status: 500 }
@@ -71,48 +44,68 @@ export async function GET() {
   }
 }
 
+/**
+ * POST /api/admin/files
+ * Create a new document with optional images
+ */
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json()
-    const { title, slug, content } = body
+    const formData = await request.formData()
+    
+    const title = formData.get('title') as string
+    const content = formData.get('content') as string
+    const mdFile = formData.get('mdFile') as File | null
 
-    if (!title || !slug || !content) {
+    if (!title) {
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        { error: 'Title is required' },
         { status: 400 }
       )
     }
 
-    // Read existing files
-    const files = await readFiles()
+    // Use content from form or read from uploaded MD file
+    let mdContent = content
+    if (mdFile) {
+      mdContent = await mdFile.text()
+    }
 
-    // Check if file with same slug already exists
-    const existingFile = files.find((f: any) => f.slug === slug)
-    if (existingFile) {
+    if (!mdContent) {
       return NextResponse.json(
-        { error: 'A file with this slug already exists' },
+        { error: 'Content or MD file is required' },
         { status: 400 }
       )
     }
 
-    // Create new file
-    const newFile = {
-      id: Date.now().toString(),
-      slug,
+    // Extract image files
+    const images: File[] = []
+    for (const [key, value] of formData.entries()) {
+      if (key.startsWith('image_') && value instanceof File) {
+        images.push(value)
+      }
+    }
+
+    // Upload to Supabase
+    const result = await uploadDoc({
       title,
-      content,
-      lastModified: new Date().toISOString(),
-    }
+      mdContent,
+      images,
+    })
 
-    // Add to files array and save
-    files.push(newFile)
-    await writeFiles(files)
-
-    return NextResponse.json(newFile, { status: 201 })
-  } catch (error) {
-    console.error('Failed to create file:', error)
     return NextResponse.json(
-      { error: 'Failed to create file' },
+      {
+        id: result.doc.id,
+        slug: result.doc.slug,
+        title: result.doc.title,
+        content: mdContent,
+        lastModified: result.doc.created_at,
+        imageCount: result.imageCount,
+      },
+      { status: 201 }
+    )
+  } catch (error: any) {
+    console.error('POST /api/admin/files error:', error)
+    return NextResponse.json(
+      { error: error.message || 'Failed to create file' },
       { status: 500 }
     )
   }

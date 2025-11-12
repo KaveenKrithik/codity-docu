@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Plus, Trash2, Eye, FileText, Search, X } from 'lucide-react'
+import { Plus, Trash2, Eye, FileText, Search, X, Upload, Image as ImageIcon } from 'lucide-react'
 import { MDXPreview } from '@/components/mdx-preview'
 
 interface MDXFile {
@@ -28,6 +28,8 @@ export default function AdminPage() {
     slug: '',
     content: '',
   })
+  const [mdFile, setMdFile] = useState<File | null>(null)
+  const [imageFiles, setImageFiles] = useState<File[]>([])
 
   useEffect(() => {
     loadFiles()
@@ -46,22 +48,37 @@ export default function AdminPage() {
   }
 
   const handleAdd = async () => {
-    if (!formData.title || !formData.slug || !formData.content) {
-      alert('Please fill in all fields')
+    if (!formData.title || !formData.content) {
+      alert('Please provide a title and content')
       return
     }
 
     try {
+      const formDataToSend = new FormData()
+      formDataToSend.append('title', formData.title)
+      formDataToSend.append('content', formData.content)
+      
+      // Add MD file if uploaded
+      if (mdFile) {
+        formDataToSend.append('mdFile', mdFile)
+      }
+      
+      // Add image files
+      imageFiles.forEach((image, index) => {
+        formDataToSend.append(`image_${index}`, image)
+      })
+
       const response = await fetch('/api/admin/files', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
+        body: formDataToSend,
       })
 
       if (response.ok) {
         await loadFiles()
         setIsAddModalOpen(false)
         setFormData({ title: '', slug: '', content: '' })
+        setMdFile(null)
+        setImageFiles([])
       } else {
         const error = await response.json()
         alert(error.error || 'Failed to add file')
@@ -92,6 +109,34 @@ export default function AdminPage() {
     setPreviewContent(file.content)
     setPreviewTitle(file.title)
     setIsPreviewModalOpen(true)
+  }
+
+  const handleMdFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file && file.name.endsWith('.md')) {
+      setMdFile(file)
+      // Read the file content
+      const content = await file.text()
+      setFormData({ ...formData, content })
+      
+      // Auto-generate title from filename if not set
+      if (!formData.title) {
+        const title = file.name.replace('.md', '').replace(/-/g, ' ').replace(/_/g, ' ')
+        setFormData({ ...formData, title, content })
+      }
+    } else {
+      alert('Please select a .md file')
+    }
+  }
+
+  const handleImageFilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || [])
+    const imageFiles = files.filter(file => file.type.startsWith('image/'))
+    setImageFiles(prev => [...prev, ...imageFiles])
+  }
+
+  const removeImage = (index: number) => {
+    setImageFiles(prev => prev.filter((_, i) => i !== index))
   }
 
   const filteredFiles = files.filter((file) => {
@@ -203,6 +248,41 @@ export default function AdminPage() {
             </div>
             <div className="flex-1 overflow-y-auto p-6 space-y-5">
               <div>
+                <label className="block text-sm font-medium mb-2.5 text-foreground">
+                  Upload Markdown File (Optional)
+                </label>
+                <div className="relative">
+                  <input
+                    type="file"
+                    accept=".md"
+                    onChange={handleMdFileChange}
+                    className="hidden"
+                    id="md-file-input"
+                  />
+                  <label
+                    htmlFor="md-file-input"
+                    className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-lg border-2 border-dashed border-border/50 bg-background/20 hover:bg-background/40 text-muted-foreground hover:text-foreground cursor-pointer transition-all"
+                  >
+                    <Upload className="h-5 w-5" />
+                    <span className="text-sm">
+                      {mdFile ? mdFile.name : 'Click to upload .md file'}
+                    </span>
+                  </label>
+                </div>
+                {mdFile && (
+                  <button
+                    onClick={() => {
+                      setMdFile(null)
+                      setFormData({ ...formData, content: '' })
+                    }}
+                    className="mt-2 text-xs text-destructive hover:underline"
+                  >
+                    Remove file
+                  </button>
+                )}
+              </div>
+
+              <div>
                 <label className="block text-sm font-medium mb-2.5 text-foreground">Title</label>
                 <input
                   type="text"
@@ -212,18 +292,55 @@ export default function AdminPage() {
                   className="w-full px-4 py-3 rounded-lg border border-border/30 bg-background/40 hover:bg-background/60 text-foreground placeholder:text-muted-foreground transition-all backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50"
                 />
               </div>
+
               <div>
-                <label className="block text-sm font-medium mb-2.5 text-foreground">Slug</label>
-                <input
-                  type="text"
-                  value={formData.slug}
-                  onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                  placeholder="e.g., /guides/new-guide"
-                  className="w-full px-4 py-3 rounded-lg border border-border/30 bg-background/40 hover:bg-background/60 text-foreground placeholder:text-muted-foreground transition-all backdrop-blur-sm focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary/50"
-                />
+                <label className="block text-sm font-medium mb-2.5 text-foreground">
+                  Upload Images (Optional)
+                </label>
+                <div className="relative">
+                  <input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handleImageFilesChange}
+                    className="hidden"
+                    id="image-files-input"
+                  />
+                  <label
+                    htmlFor="image-files-input"
+                    className="flex items-center justify-center gap-2 w-full px-4 py-3 rounded-lg border-2 border-dashed border-border/50 bg-background/20 hover:bg-background/40 text-muted-foreground hover:text-foreground cursor-pointer transition-all"
+                  >
+                    <ImageIcon className="h-5 w-5" />
+                    <span className="text-sm">Click to upload images</span>
+                  </label>
+                </div>
+                {imageFiles.length > 0 && (
+                  <div className="mt-3 space-y-2">
+                    <p className="text-xs text-muted-foreground">{imageFiles.length} image(s) selected:</p>
+                    <div className="flex flex-wrap gap-2">
+                      {imageFiles.map((file, index) => (
+                        <div
+                          key={index}
+                          className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-secondary/30 border border-border/20"
+                        >
+                          <span className="text-xs text-foreground">{file.name}</span>
+                          <button
+                            onClick={() => removeImage(index)}
+                            className="text-destructive hover:text-destructive/80"
+                          >
+                            <X className="h-3 w-3" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
+
               <div>
-                <label className="block text-sm font-medium mb-2.5 text-foreground">Content (MDX)</label>
+                <label className="block text-sm font-medium mb-2.5 text-foreground">
+                  Content (MDX) {mdFile && <span className="text-xs text-muted-foreground">(loaded from file)</span>}
+                </label>
                 <textarea
                   value={formData.content}
                   onChange={(e) => setFormData({ ...formData, content: e.target.value })}

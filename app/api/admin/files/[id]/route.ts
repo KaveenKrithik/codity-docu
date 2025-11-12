@@ -1,78 +1,117 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { readFile, writeFile, mkdir } from 'fs/promises'
-import { join } from 'path'
-import { existsSync } from 'fs'
+import { deleteDoc, editDoc, downloadMdxContent, fetchAllDocs } from '@/lib/docOperations'
 
-const DATA_DIR = join(process.cwd(), 'data')
-const FILES_JSON = join(DATA_DIR, 'mdx-files.json')
-
-// Ensure data directory exists
-async function ensureDataDir() {
+/**
+ * GET /api/admin/files/[id]
+ * Fetch a single document by ID
+ */
+export async function GET(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
   try {
-    if (!existsSync(DATA_DIR)) {
-      await mkdir(DATA_DIR, { recursive: true })
+    const docs = await fetchAllDocs()
+    const doc = docs.find(d => d.id === params.id)
+    
+    if (!doc) {
+      return NextResponse.json(
+        { error: 'Document not found' },
+        { status: 404 }
+      )
     }
+
+    const content = await downloadMdxContent(doc.file_path)
+    
+    return NextResponse.json({
+      id: doc.id,
+      slug: doc.slug,
+      title: doc.title,
+      content,
+      lastModified: doc.updated_at,
+    })
   } catch (error) {
-    console.error('Failed to create data directory:', error)
+    console.error('GET /api/admin/files/[id] error:', error)
+    return NextResponse.json(
+      { error: 'Failed to fetch file' },
+      { status: 500 }
+    )
   }
 }
 
-// Read files from JSON
-async function readFiles() {
-  try {
-    await ensureDataDir()
-    if (existsSync(FILES_JSON)) {
-      const data = await readFile(FILES_JSON, 'utf-8')
-      return JSON.parse(data)
-    }
-    return []
-  } catch (error) {
-    console.error('Failed to read files:', error)
-    return []
-  }
-}
-
-// Write files to JSON
-async function writeFiles(files: any[]) {
-  try {
-    await ensureDataDir()
-    await writeFile(FILES_JSON, JSON.stringify(files, null, 2), 'utf-8')
-  } catch (error) {
-    console.error('Failed to write files:', error)
-    throw error
-  }
-}
-
+/**
+ * DELETE /api/admin/files/[id]
+ * Delete a document and all its files
+ */
 export async function DELETE(
   request: NextRequest,
   { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = params
-
-    // Read existing files
-    const files = await readFiles()
-
-    // Find and remove the file
-    const filteredFiles = files.filter((f: any) => f.id !== id)
-
-    if (files.length === filteredFiles.length) {
-      return NextResponse.json(
-        { error: 'File not found' },
-        { status: 404 }
-      )
-    }
-
-    // Save updated files
-    await writeFiles(filteredFiles)
-
+    await deleteDoc(params.id)
+    
     return NextResponse.json({ success: true })
-  } catch (error) {
-    console.error('Failed to delete file:', error)
+  } catch (error: any) {
+    console.error('DELETE /api/admin/files/[id] error:', error)
     return NextResponse.json(
-      { error: 'Failed to delete file' },
+      { error: error.message || 'Failed to delete file' },
       { status: 500 }
     )
   }
 }
+
+/**
+ * PUT /api/admin/files/[id]
+ * Update a document
+ */
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const formData = await request.formData()
+    
+    const title = formData.get('title') as string | null
+    const content = formData.get('content') as string | null
+    const mdFile = formData.get('mdFile') as File | null
+
+    // Use content from form or read from uploaded MD file
+    let mdContent = content
+    if (mdFile) {
+      mdContent = await mdFile.text()
+    }
+
+    // Extract image files
+    const images: File[] = []
+    for (const [key, value] of formData.entries()) {
+      if (key.startsWith('image_') && value instanceof File) {
+        images.push(value)
+      }
+    }
+
+    // Update in Supabase
+    const result = await editDoc({
+      id: params.id,
+      title: title || undefined,
+      mdContent: mdContent || undefined,
+      images,
+    })
+
+    const updatedContent = mdContent || await downloadMdxContent(result.doc.file_path)
+
+    return NextResponse.json({
+      id: result.doc.id,
+      slug: result.doc.slug,
+      title: result.doc.title,
+      content: updatedContent,
+      lastModified: result.doc.updated_at,
+    })
+  } catch (error: any) {
+    console.error('PUT /api/admin/files/[id] error:', error)
+    return NextResponse.json(
+      { error: error.message || 'Failed to update file' },
+      { status: 500 }
+    )
+  }
+}
+
 
