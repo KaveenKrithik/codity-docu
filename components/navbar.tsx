@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { Search, Menu, X, ArrowLeft } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useTheme } from 'next-themes'
@@ -37,17 +38,32 @@ export function Navbar() {
             {/* Logo */}
             <Link
               href="/"
-              className="flex items-center space-x-2 group"
+              className="flex items-center space-x-3 group"
             >
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                className="relative"
+                className="relative inline-flex items-center space-x-2 py-2"
               >
-                <div className="absolute inset-0 bg-primary/20 blur-xl rounded-lg group-hover:bg-primary/30 transition-colors" />
-                <div className="relative bg-gradient-to-br from-primary to-primary/80 text-primary-foreground px-3 py-1.5 rounded-lg font-bold text-lg">
-                  Codity
-                </div>
+                <Image
+                  src="/logo-navbar.svg"
+                  alt="Codity Logo"
+                  width={32}
+                  height={32}
+                  className="w-8 h-8"
+                />
+                <span 
+                  className="font-bold bg-gradient-to-r from-[#60a5fa] via-[#3b82f6] to-[#2563eb] bg-clip-text text-transparent group-hover:from-white group-hover:via-blue-400 group-hover:to-blue-600 transition-all duration-300 pb-0.5"
+                  style={{
+                    fontSize: '1.6rem',
+                    fontWeight: 700,
+                    letterSpacing: '-0.01em',
+                    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif',
+                    lineHeight: '1.3'
+                  }}
+                >
+                  Codity.ai
+                </span>
               </motion.div>
             </Link>
 
