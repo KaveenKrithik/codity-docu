@@ -82,6 +82,14 @@ const navigation = [
       { name: 'Authorization', href: '/security/authorization' },
     ],
   },
+  {
+    name: 'Admin',
+    href: '/admin',
+    icon: Settings,
+    children: [
+      { name: 'Dashboard', href: '/admin' },
+    ],
+  },
 ]
 
 export function Sidebar() {

@@ -34,9 +34,16 @@ export function Navbar() {
       <nav
         className={`sticky top-0 z-50 w-full border-b transition-all duration-300 ${
           isScrolled
-            ? 'bg-background/80 backdrop-blur-xl border-border/40 shadow-lg shadow-black/5'
-            : 'bg-background/60 backdrop-blur-md border-border/30'
+            ? 'bg-background/40 backdrop-blur-xl border-border/20 shadow-lg shadow-black/10'
+            : 'bg-background/30 backdrop-blur-lg border-border/20'
         }`}
+        style={{
+          background: isScrolled
+            ? 'rgba(0, 0, 0, 0.4)'
+            : 'rgba(0, 0, 0, 0.3)',
+          backdropFilter: 'blur(20px) saturate(180%)',
+          WebkitBackdropFilter: 'blur(20px) saturate(180%)',
+        }}
       >
         <div className="mx-auto flex h-14 max-w-screen-2xl items-center justify-between px-4 sm:px-6 lg:px-8">
           {/* Logo */}
@@ -71,7 +78,7 @@ export function Navbar() {
           <div className="hidden md:flex flex-1 max-w-md mx-8">
             <button
               onClick={() => setIsSearchOpen(true)}
-              className="w-full flex items-center gap-2 px-3 h-9 rounded-md border border-border bg-secondary text-sm text-muted-foreground hover:bg-accent hover:text-foreground transition-colors"
+              className="w-full flex items-center gap-2 px-3 h-9 rounded-lg border border-border/30 bg-background/20 hover:bg-background/30 text-sm text-muted-foreground hover:text-foreground transition-all backdrop-blur-sm"
             >
               <Search className="h-4 w-4 shrink-0" />
               <span className="flex-1 text-left">Search docs...</span>
@@ -85,7 +92,7 @@ export function Navbar() {
           <div className="flex items-center gap-3">
             <Link
               href="https://dashboard.codity.ai"
-              className="hidden sm:inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors h-9 px-4 py-2 bg-primary text-primary-foreground hover:bg-primary/90"
+              className="hidden sm:inline-flex items-center justify-center rounded-lg text-sm font-medium transition-all h-9 px-4 py-2 bg-transparent hover:bg-primary/10 text-foreground/70 hover:text-foreground border border-border/40 hover:border-primary/40 backdrop-blur-sm active:scale-95"
             >
               Dashboard
             </Link>
