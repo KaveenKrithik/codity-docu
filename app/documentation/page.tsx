@@ -8,26 +8,34 @@ export default async function DocumentationPage() {
     // Fetch all documents from Supabase
     const docs = await fetchAllDocs()
     
-    // Combine all MDX content
+    if (docs.length === 0) {
+      // No documents uploaded yet
+      return (
+        <div className="max-w-4xl mx-auto">
+          <MDXContent source="# Documentation\n\nNo documents have been uploaded yet. Please use the admin panel to add content." />
+        </div>
+      )
+    }
+
+    // Combine all MDX content from all documents
     let combinedContent = ''
     
-    if (docs.length > 0) {
-      // Fetch content for each document
-      for (const doc of docs) {
-        try {
-          const content = await downloadMdxContent(doc.file_path)
-          combinedContent += content + '\n\n'
-        } catch (error) {
-          console.error(`Failed to load content for ${doc.slug}:`, error)
-        }
+    for (const doc of docs) {
+      try {
+        const content = await downloadMdxContent(doc.file_path)
+        combinedContent += content + '\n\n---\n\n'
+      } catch (error) {
+        console.error(`Failed to load content for ${doc.slug}:`, error)
       }
-    } else {
-      // Fallback content if no docs exist
-      combinedContent = `# Documentation
+    }
 
-Welcome to the Codity Documentation.
-
-No documentation has been uploaded yet. Please use the admin panel to add content.`
+    // If no content was loaded, show error
+    if (!combinedContent.trim()) {
+      return (
+        <div className="max-w-4xl mx-auto">
+          <MDXContent source="# Error\n\nFailed to load documentation content." />
+        </div>
+      )
     }
 
     return (
@@ -39,9 +47,7 @@ No documentation has been uploaded yet. Please use the admin panel to add conten
     console.error('Error loading documentation:', error)
     return (
       <div className="max-w-4xl mx-auto">
-        <MDXContent source={`# Error
-
-Failed to load documentation. Please try again later.`} />
+        <MDXContent source="# Error\n\nFailed to load documentation. Please try again later." />
       </div>
     )
   }

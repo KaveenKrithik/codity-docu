@@ -4,98 +4,68 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
-  Home,
-  Book,
-  Code,
+  FileText,
   Settings,
-  Zap,
-  Database,
-  Shield,
   ChevronRight,
   Menu,
   X,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-const navigation = [
-  {
-    name: 'Getting Started',
-    href: '/documentation',
-    icon: Home,
-    children: [
-      { name: 'Introduction', href: '/documentation' },
-      { name: 'Quick Start', href: '/getting-started' },
-      { name: 'Installation', href: '/installation' },
-    ],
-  },
-  {
-    name: 'API Reference',
-    href: '/api',
-    icon: Code,
-    children: [
-      { name: 'Overview', href: '/api' },
-      { name: 'Authentication', href: '/api/authentication' },
-      { name: 'Endpoints', href: '/api/endpoints' },
-      { name: 'Webhooks', href: '/api/webhooks' },
-    ],
-  },
-  {
-    name: 'Guides',
-    href: '/guides',
-    icon: Book,
-    children: [
-      { name: 'Overview', href: '/guides' },
-      { name: 'PR Reviews', href: '/guides/pr-reviews' },
-      { name: 'JIRA Integration', href: '/guides/jira-integration' },
-      { name: 'Code Navigation', href: '/guides/code-navigation' },
-      { name: 'Best Practices', href: '/guides/best-practices' },
-      { name: 'Troubleshooting', href: '/guides/troubleshooting' },
-    ],
-  },
-  {
-    name: 'Performance',
-    href: '/performance',
-    icon: Zap,
-    children: [
-      { name: 'Overview', href: '/performance' },
-      { name: 'Optimization', href: '/performance/optimization' },
-      { name: 'Caching', href: '/performance/caching' },
-    ],
-  },
-  {
-    name: 'Database',
-    href: '/database',
-    icon: Database,
-    children: [
-      { name: 'Overview', href: '/database' },
-      { name: 'Schema', href: '/database/schema' },
-      { name: 'Migrations', href: '/database/migrations' },
-    ],
-  },
-  {
-    name: 'Security',
-    href: '/security',
-    icon: Shield,
-    children: [
-      { name: 'Overview', href: '/security' },
-      { name: 'Authentication', href: '/security/authentication' },
-      { name: 'Authorization', href: '/security/authorization' },
-    ],
-  },
-  {
-    name: 'Admin',
-    href: '/admin',
-    icon: Settings,
-    children: [
-      { name: 'Dashboard', href: '/admin' },
-    ],
-  },
-]
+interface Doc {
+  id: string
+  title: string
+  slug: string
+  file_path: string
+  created_at: string
+  updated_at: string
+}
 
 export function Sidebar() {
   const pathname = usePathname()
-  const [openSections, setOpenSections] = useState<string[]>([])
+  const [openSections, setOpenSections] = useState<string[]>(['Documentation'])
   const [isMobileOpen, setIsMobileOpen] = useState(false)
+  const [docs, setDocs] = useState<Doc[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    // Fetch documents from API
+    async function fetchDocs() {
+      try {
+        const response = await fetch('/api/admin/files')
+        if (response.ok) {
+          const data = await response.json()
+          setDocs(data)
+        }
+      } catch (error) {
+        console.error('Failed to fetch documents:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchDocs()
+  }, [])
+
+  // Build dynamic navigation from uploaded documents
+  const navigation = [
+    {
+      name: 'Documentation',
+      href: '/documentation',
+      icon: FileText,
+      children: docs.map(doc => ({
+        name: doc.title,
+        href: `/docs/${doc.slug}`,
+      })),
+    },
+    {
+      name: 'Admin',
+      href: '/admin',
+      icon: Settings,
+      children: [
+        { name: 'Dashboard', href: '/admin' },
+      ],
+    },
+  ]
 
   useEffect(() => {
     // Auto-expand section containing current path
