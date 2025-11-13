@@ -59,17 +59,8 @@ export default async function DocsPage({ params }: PageProps) {
     const mdxContent = await downloadMdxContent(doc.file_path)
 
     return (
-      <div className="max-w-4xl mx-auto px-6 py-12">
-        <article className="prose prose-slate dark:prose-invert max-w-none">
-          <h1 className="text-4xl font-bold mb-8">{doc.title}</h1>
-          <MDXContent source={mdxContent} />
-        </article>
-        
-        <div className="mt-12 pt-6 border-t border-border/30">
-          <p className="text-sm text-muted-foreground">
-            Last updated: {new Date(doc.updated_at).toLocaleDateString()}
-          </p>
-        </div>
+      <div className="max-w-4xl mx-auto px-6 py-8">
+        <MDXContent source={mdxContent} />
       </div>
     )
   } catch (error) {
