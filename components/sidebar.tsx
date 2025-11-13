@@ -57,14 +57,6 @@ export function Sidebar() {
         href: `/docs/${doc.slug}`,
       })),
     },
-    {
-      name: 'Admin',
-      href: '/admin',
-      icon: Settings,
-      children: [
-        { name: 'Dashboard', href: '/admin' },
-      ],
-    },
   ]
 
   useEffect(() => {
