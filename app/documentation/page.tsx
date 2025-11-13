@@ -11,7 +11,7 @@ export default async function DocumentationPage() {
     if (docs.length === 0) {
       // No documents uploaded yet
       return (
-        <div className="max-w-4xl mx-auto">
+        <div className="w-full px-8 py-8">
           <MDXContent source="# Documentation\n\nNo documents have been uploaded yet. Please use the admin panel to add content." />
         </div>
       )
@@ -32,21 +32,21 @@ export default async function DocumentationPage() {
     // If no content was loaded, show error
     if (!combinedContent.trim()) {
       return (
-        <div className="max-w-4xl mx-auto">
+        <div className="w-full px-8 py-8">
           <MDXContent source="# Error\n\nFailed to load documentation content." />
         </div>
       )
     }
 
     return (
-      <div className="max-w-4xl mx-auto">
+      <div className="w-full px-8 py-8">
         <MDXContent source={combinedContent} />
       </div>
     )
   } catch (error) {
     console.error('Error loading documentation:', error)
     return (
-      <div className="max-w-4xl mx-auto">
+      <div className="w-full px-8 py-8">
         <MDXContent source="# Error\n\nFailed to load documentation. Please try again later." />
       </div>
     )

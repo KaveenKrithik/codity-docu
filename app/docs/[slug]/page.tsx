@@ -59,7 +59,7 @@ export default async function DocsPage({ params }: PageProps) {
     const mdxContent = await downloadMdxContent(doc.file_path)
 
     return (
-      <div className="max-w-4xl mx-auto px-6 py-8">
+      <div className="w-full px-8 py-8">
         <MDXContent source={mdxContent} />
       </div>
     )
