@@ -1,7 +1,6 @@
 import { notFound } from 'next/navigation'
 import { fetchDocBySlug, downloadMdxContent } from '@/lib/docOperations'
 import { MDXContent } from '@/lib/mdx'
-import { processImagePaths } from '@/lib/imageUtils'
 
 interface PageProps {
   params: {
@@ -46,6 +45,7 @@ export async function generateMetadata({ params }: PageProps) {
 
 /**
  * Dynamic docs page that renders MDX from Supabase
+ * Note: Image paths are already processed during upload to use Supabase public URLs
  */
 export default async function DocsPage({ params }: PageProps) {
   try {
@@ -57,11 +57,7 @@ export default async function DocsPage({ params }: PageProps) {
     }
 
     // Download MDX content from Supabase Storage
-    let mdxContent = await downloadMdxContent(doc.file_path)
-    
-    // Process image paths to use Supabase URLs
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
-    mdxContent = processImagePaths(mdxContent, params.slug, supabaseUrl)
+    const mdxContent = await downloadMdxContent(doc.file_path)
 
     return (
       <div className="w-full px-8 py-8">

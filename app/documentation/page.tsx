@@ -1,6 +1,5 @@
 import { MDXContent } from '@/lib/mdx'
 import { fetchAllDocs, downloadMdxContent } from '@/lib/docOperations'
-import { processImagePaths } from '@/lib/imageUtils'
 
 export const revalidate = 0 // Disable caching to always fetch fresh data
 
@@ -19,14 +18,12 @@ export default async function DocumentationPage() {
     }
 
     // Combine all MDX content from all documents
+    // Note: Image paths are already processed during upload to use Supabase public URLs
     let combinedContent = ''
-    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || ''
     
     for (const doc of docs) {
       try {
-        let content = await downloadMdxContent(doc.file_path)
-        // Process image paths to use Supabase URLs
-        content = processImagePaths(content, doc.slug, supabaseUrl)
+        const content = await downloadMdxContent(doc.file_path)
         combinedContent += content + '\n\n---\n\n'
       } catch (error) {
         console.error(`Failed to load content for ${doc.slug}:`, error)

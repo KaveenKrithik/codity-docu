@@ -29,13 +29,58 @@ interface UploadDocParams {
 }
 
 /**
+ * Replace image paths in MDX content with Supabase public URLs
+ */
+function replaceImagePathsWithUrls(mdxContent: string, slug: string, supabaseUrl: string): string {
+  const bucketName = 'DOCUMENTATIONS and BLOGS'
+  
+  // Replace all markdown image references: ![alt](anything/with/path.png)
+  // We just extract the filename and construct the correct Supabase URL
+  return mdxContent.replace(
+    /!\[([^\]]*)\]\(([^)]+)\)/g,
+    (match, alt, imagePath) => {
+      // Skip if already a full URL
+      if (imagePath.startsWith('http://') || imagePath.startsWith('https://')) {
+        return match;
+      }
+
+      // Extract just the filename from the path
+      // Handles: "Codity ai/Screenshot.png", "Codity%20ai/Screenshot.png", 
+      //          "./images/Screenshot.png", "images/Screenshot.png", "Screenshot.png"
+      let filename = imagePath;
+      
+      // Remove any folder prefix
+      if (filename.includes('/')) {
+        const parts = filename.split('/');
+        filename = parts[parts.length - 1]; // Get the last part (actual filename)
+      }
+      
+      // Decode URL encoding if present (e.g., %20 -> space)
+      filename = decodeURIComponent(filename);
+      
+      // Replace spaces with underscores (files are stored with underscores in Supabase)
+      filename = filename.replace(/\s+/g, '_');
+
+      // Construct the Supabase public URL
+      // Encode each path component separately
+      const bucketPath = encodeURIComponent(bucketName);
+      const storagePath = `DOCUMENTATION/${slug}/images/${encodeURIComponent(filename)}`;
+      const imageUrl = `${supabaseUrl}/storage/v1/object/public/${bucketPath}/${storagePath}`;
+
+      return `![${alt}](${imageUrl})`;
+    }
+  );
+}
+
+
+/**
  * Upload a new document with optional images to Supabase
  * Creates the folder structure: docs/MDNAME/index.mdx and docs/MDNAME/images/
  */
 export async function uploadDoc({ title, mdContent, images = [] }: UploadDocParams) {
   const supabase = getSupabaseAdmin()
   const slug = generateSlug(title)
-  const mdxContent = convertMdToMdx(mdContent)
+  let mdxContent = convertMdToMdx(mdContent)
   
   try {
     // 1. Check if a doc with this slug already exists
@@ -49,20 +94,7 @@ export async function uploadDoc({ title, mdContent, images = [] }: UploadDocPara
       throw new Error(`A document with slug "${slug}" already exists`)
     }
 
-    // 2. Upload the MDX file to storage
-    const mdxFilePath = `DOCUMENTATION/${slug}/index.mdx`
-    const { error: mdxError } = await supabase.storage
-      .from('DOCUMENTATIONS and BLOGS')
-      .upload(mdxFilePath, new Blob([mdxContent], { type: 'text/markdown' }), {
-        contentType: 'text/markdown',
-        upsert: false
-      })
-
-    if (mdxError) {
-      throw new Error(`Failed to upload MDX file: ${mdxError.message}`)
-    }
-
-    // 3. Upload images if any
+    // 2. Upload images first to ensure they're available
     const imageUrls: string[] = []
     if (images.length > 0) {
       for (const image of images) {
@@ -83,7 +115,24 @@ export async function uploadDoc({ title, mdContent, images = [] }: UploadDocPara
       }
     }
 
-    // 4. Create database entry
+    // 3. Replace image paths in MDX content with Supabase public URLs
+    const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+    mdxContent = replaceImagePathsWithUrls(mdxContent, slug, supabaseUrl)
+
+    // 4. Upload the MDX file to storage (after processing image paths)
+    const mdxFilePath = `DOCUMENTATION/${slug}/index.mdx`
+    const { error: mdxError } = await supabase.storage
+      .from('DOCUMENTATIONS and BLOGS')
+      .upload(mdxFilePath, new Blob([mdxContent], { type: 'text/markdown' }), {
+        contentType: 'text/markdown',
+        upsert: false
+      })
+
+    if (mdxError) {
+      throw new Error(`Failed to upload MDX file: ${mdxError.message}`)
+    }
+
+    // 5. Create database entry
     const { data: newDoc, error: dbError } = await supabase
       .from('docs')
       .insert({
@@ -192,7 +241,12 @@ export async function editDoc({ id, title, mdContent, images = [] }: EditDocPara
 
     // 3. Update MDX content if provided
     if (mdContent) {
-      const mdxContent = convertMdToMdx(mdContent)
+      let mdxContent = convertMdToMdx(mdContent)
+      
+      // Replace image paths with Supabase public URLs
+      const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
+      mdxContent = replaceImagePathsWithUrls(mdxContent, newSlug, supabaseUrl)
+      
       const mdxFilePath = `DOCUMENTATION/${newSlug}/index.mdx`
       
       const { error: uploadError } = await supabase.storage
