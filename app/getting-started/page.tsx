@@ -1,6 +1,9 @@
 import { MDXContent } from '@/lib/mdx'
+import { fetchSectionContent } from '@/lib/docOperations'
 
-const content = `# Getting Started with Codity
+export const revalidate = 0 // Disable caching
+
+const fallbackContent = `# Getting Started with Codity
 
 Get up and running with Codity in just a few minutes. This guide will walk you through connecting your repositories and configuring your first code reviews.
 
@@ -73,5 +76,6 @@ Once your repositories are connected:
 *Ready to dive deeper? Check out our [API Documentation](/api).*`
 
 export default async function GettingStartedPage() {
+  const content = await fetchSectionContent('getting-started', fallbackContent)
   return <MDXContent source={content} />
 }

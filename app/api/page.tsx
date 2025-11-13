@@ -1,6 +1,9 @@
 import { MDXContent } from '@/lib/mdx'
+import { fetchSectionContent } from '@/lib/docOperations'
 
-const content = `# API Reference
+export const revalidate = 0
+
+const fallbackContent = `# API Reference
 
 Complete reference for all Codity API endpoints, including request/response formats, authentication, and error handling.
 
@@ -86,6 +89,7 @@ Errors are returned with appropriate HTTP status codes:
 *For detailed endpoint documentation, see [Endpoints](/api/endpoints).*`
 
 export default async function APIPage() {
+  const content = await fetchSectionContent('api-overview', fallbackContent)
   return <MDXContent source={content} />
 }
 

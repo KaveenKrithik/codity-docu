@@ -1,6 +1,9 @@
 import { MDXContent } from '@/lib/mdx'
+import { fetchSectionContent } from '@/lib/docOperations'
 
-const content = `# Performance
+export const revalidate = 0
+
+const fallbackContent = `# Performance
 
 Optimize your Codity implementation for maximum performance.
 
@@ -25,6 +28,7 @@ Codity is designed for high performance, but following best practices can help y
 *Learn more about [Optimization](/performance/optimization).*`
 
 export default async function PerformancePage() {
+  const content = await fetchSectionContent('performance-overview', fallbackContent)
   return <MDXContent source={content} />
 }
 

@@ -1,6 +1,9 @@
 import { MDXContent } from '@/lib/mdx'
+import { fetchSectionContent } from '@/lib/docOperations'
 
-const content = `# Security
+export const revalidate = 0
+
+const fallbackContent = `# Security
 
 Security best practices and guidelines for using Codity.
 
@@ -29,6 +32,7 @@ Security is a top priority at Codity. Follow these guidelines to keep your imple
 *Start with [Authentication](/security/authentication).*`
 
 export default async function SecurityPage() {
+  const content = await fetchSectionContent('security-overview', fallbackContent)
   return <MDXContent source={content} />
 }
 

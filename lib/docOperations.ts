@@ -383,3 +383,20 @@ export async function downloadMdxContent(filePath: string): Promise<string> {
     throw error
   }
 }
+
+/**
+ * Fetch content for a specific section/category by slug
+ * Returns the MDX content or a fallback message
+ */
+export async function fetchSectionContent(slug: string, fallbackContent: string): Promise<string> {
+  try {
+    const doc = await fetchDocBySlug(slug)
+    if (doc && doc.file_path) {
+      return await downloadMdxContent(doc.file_path)
+    }
+    return fallbackContent
+  } catch (error) {
+    console.error(`Error fetching content for ${slug}:`, error)
+    return fallbackContent
+  }
+}

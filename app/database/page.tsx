@@ -1,6 +1,9 @@
 import { MDXContent } from '@/lib/mdx'
+import { fetchSectionContent } from '@/lib/docOperations'
 
-const content = `# Database
+export const revalidate = 0
+
+const fallbackContent = `# Database
 
 Learn about Codity's database structure and management.
 
@@ -25,6 +28,7 @@ Codity uses a modern, scalable database architecture designed for performance an
 *Start with [Schema](/database/schema) to understand the structure.*`
 
 export default async function DatabasePage() {
+  const content = await fetchSectionContent('database-overview', fallbackContent)
   return <MDXContent source={content} />
 }
 

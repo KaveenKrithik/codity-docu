@@ -32,14 +32,14 @@ No documentation has been uploaded yet. Please use the admin panel to add conten
 
     return (
       <div className="max-w-4xl mx-auto">
-        <MDXContent content={combinedContent} />
+        <MDXContent source={combinedContent} />
       </div>
     )
   } catch (error) {
     console.error('Error loading documentation:', error)
     return (
       <div className="max-w-4xl mx-auto">
-        <MDXContent content={`# Error
+        <MDXContent source={`# Error
 
 Failed to load documentation. Please try again later.`} />
       </div>

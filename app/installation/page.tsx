@@ -1,6 +1,9 @@
 import { MDXContent } from '@/lib/mdx'
+import { fetchSectionContent } from '@/lib/docOperations'
 
-const content = `# Installation
+export const revalidate = 0
+
+const fallbackContent = `# Installation
 
 This guide covers different installation methods for Codity, depending on your use case and environment.
 
@@ -92,6 +95,7 @@ client.health.check()
 *Having issues? Check our [Troubleshooting Guide](/guides/troubleshooting).*`
 
 export default async function InstallationPage() {
+  const content = await fetchSectionContent('installation', fallbackContent)
   return <MDXContent source={content} />
 }
 
