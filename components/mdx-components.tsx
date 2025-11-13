@@ -1,5 +1,50 @@
 import { CodeBlock } from './code-block'
 
+// Helper function to get Supabase public URL for images
+function getImageUrl(src: string): string {
+  // If it's already a full URL, return as is
+  if (src.startsWith('http://') || src.startsWith('https://')) {
+    return src
+  }
+  
+  const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL
+  const bucketName = 'DOCUMENTATIONS and BLOGS'
+  
+  if (supabaseUrl) {
+    // Handle different image path formats
+    
+    // If it's a direct filename (e.g., "fig1.png"), look in root images folder
+    if (!src.includes('/')) {
+      const imagePath = `images/${src}`
+      return `${supabaseUrl}/storage/v1/object/public/${encodeURIComponent(bucketName)}/${imagePath}`
+    }
+    
+    // If it starts with /, remove it and check if it's just a filename
+    if (src.startsWith('/')) {
+      const cleanSrc = src.substring(1)
+      if (!cleanSrc.includes('/')) {
+        const imagePath = `images/${cleanSrc}`
+        return `${supabaseUrl}/storage/v1/object/public/${encodeURIComponent(bucketName)}/${imagePath}`
+      }
+      // If it starts with /images/, use it as is
+      if (cleanSrc.startsWith('images/')) {
+        return `${supabaseUrl}/storage/v1/object/public/${encodeURIComponent(bucketName)}/${cleanSrc}`
+      }
+      return src.substring(1) // Remove leading slash for public folder
+    }
+    
+    // If the path doesn't start with DOCUMENTATION, assume it's relative
+    const imagePath = src.startsWith('DOCUMENTATION/') 
+      ? src 
+      : `images/${src}`
+    
+    return `${supabaseUrl}/storage/v1/object/public/${encodeURIComponent(bucketName)}/${imagePath}`
+  }
+  
+  // Fallback to original src
+  return src
+}
+
 export const mdxComponents = {
   h1: (props: any) => (
     <h1
@@ -60,10 +105,15 @@ export const mdxComponents = {
         </div>
       )
     }
+    
+    // Convert image src to proper Supabase URL if needed
+    const imgSrc = getImageUrl(props.src)
+    
     return (
       <img
-        className="my-8 rounded-xl border border-border/50 shadow-xl w-full transition-all hover:shadow-2xl hover:scale-[1.01]"
         {...props}
+        src={imgSrc}
+        className="my-8 rounded-xl border border-border/50 shadow-xl w-full transition-all hover:shadow-2xl hover:scale-[1.01]"
       />
     )
   },
