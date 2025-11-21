@@ -72,6 +72,16 @@ export function Navbar() {
                 </span>
               </div>
             </Link>
+
+            {/* Navigation Links */}
+            <div className="hidden lg:flex items-center gap-1">
+              <Link
+                href="/documentation"
+                className="px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-primary/10"
+              >
+                Documentation
+              </Link>
+            </div>
           </div>
 
           {/* Search Bar */}
