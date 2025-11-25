@@ -9,12 +9,12 @@ export default function DocumentationLayout({
   children: React.ReactNode
 }) {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-black">
       <Navbar />
       <div className="flex">
         <Sidebar />
-        <main className="flex-1 lg:ml-56">
-          <div className="max-w-3xl px-4 py-16 sm:px-6 lg:px-8">
+        <main className="flex-1 lg:ml-60">
+          <div className="max-w-4xl px-6 py-8">
             <article className="prose prose-lg dark:prose-invert max-w-none">
               {children}
             </article>

@@ -5,8 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import {
   FileText,
-  Settings,
-  ChevronRight,
+  ChevronDown,
   Menu,
   X,
 } from 'lucide-react'
@@ -29,7 +28,6 @@ export function Sidebar() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Fetch documents from API
     async function fetchDocs() {
       try {
         const response = await fetch('/api/admin/files')
@@ -46,7 +44,6 @@ export function Sidebar() {
     fetchDocs()
   }, [])
 
-  // Build dynamic navigation from uploaded documents
   const navigation = [
     {
       name: 'Documentation',
@@ -60,7 +57,6 @@ export function Sidebar() {
   ]
 
   useEffect(() => {
-    // Auto-expand section containing current path
     const currentSection = navigation.find((section) =>
       section.children?.some((child) => child.href === pathname)
     )
@@ -82,21 +78,21 @@ export function Sidebar() {
       {/* Mobile menu button */}
       <button
         onClick={() => setIsMobileOpen(!isMobileOpen)}
-        className="lg:hidden fixed top-16 left-4 z-50 h-9 w-9 rounded-md bg-background border border-border flex items-center justify-center shadow-sm"
+        className="lg:hidden fixed top-16 left-4 z-50 h-8 w-8 rounded bg-white/5 border border-white/10 flex items-center justify-center"
       >
-        {isMobileOpen ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
+        {isMobileOpen ? <X className="h-4 w-4 text-white" /> : <Menu className="h-4 w-4 text-white" />}
       </button>
 
       {/* Sidebar */}
       <aside
         className={cn(
-          'fixed lg:sticky top-14 left-0 h-[calc(100vh-3.5rem)] w-56 z-40 border-r border-border bg-background overflow-y-auto',
+          'fixed lg:sticky top-14 left-0 h-[calc(100vh-3.5rem)] w-60 z-40 bg-black border-r border-white/5 overflow-y-auto',
           'lg:block',
           isMobileOpen ? 'block' : 'hidden'
         )}
       >
         <div className="h-full flex flex-col">
-          <nav className="flex-1 p-4 space-y-1">
+          <nav className="flex-1 p-3 space-y-1">
             {navigation.map((section) => {
               const isOpen = openSections.includes(section.name)
               const hasActiveChild = section.children?.some(
@@ -104,30 +100,25 @@ export function Sidebar() {
               )
 
               return (
-                <div key={section.name} className="space-y-1">
+                <div key={section.name} className="space-y-0.5">
                   <button
                     onClick={() => toggleSection(section.name)}
-                    className={cn(
-                      'w-full flex items-center justify-between px-3 py-2 rounded-md text-sm font-medium transition-colors',
-                      hasActiveChild
-                        ? 'bg-primary/20 text-primary'
-                        : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
-                    )}
+                    className="w-full flex items-center justify-between px-2 py-1.5 rounded text-sm font-medium text-gray-400 hover:text-white hover:bg-white/5 transition-colors"
                   >
                     <div className="flex items-center gap-2">
                       <section.icon className="h-4 w-4 shrink-0" />
                       <span>{section.name}</span>
                     </div>
-                    <ChevronRight
+                    <ChevronDown
                       className={cn(
                         'h-4 w-4 shrink-0 transition-transform',
-                        isOpen && 'rotate-90'
+                        isOpen && 'rotate-180'
                       )}
                     />
                   </button>
 
                   {isOpen && section.children && (
-                    <div className="ml-7 mt-1 space-y-1 border-l border-border pl-4">
+                    <div className="mt-0.5 space-y-0.5 pl-2">
                       {section.children.map((child) => {
                         const isActive = child.href === pathname
                         return (
@@ -136,10 +127,10 @@ export function Sidebar() {
                             href={child.href}
                             onClick={() => setIsMobileOpen(false)}
                             className={cn(
-                              'block px-3 py-1.5 rounded-md text-sm transition-colors',
+                              'block px-2 py-1.5 rounded text-sm transition-colors',
                               isActive
-                                ? 'text-primary font-medium bg-primary/20'
-                                : 'text-muted-foreground hover:text-foreground hover:bg-secondary'
+                                ? 'text-white bg-white/10 font-medium'
+                                : 'text-gray-400 hover:text-white hover:bg-white/5'
                             )}
                           >
                             {child.name}
@@ -159,7 +150,7 @@ export function Sidebar() {
       {isMobileOpen && (
         <div
           onClick={() => setIsMobileOpen(false)}
-          className="lg:hidden fixed inset-0 bg-black/50 z-30"
+          className="lg:hidden fixed inset-0 bg-black/80 z-30"
         />
       )}
     </>

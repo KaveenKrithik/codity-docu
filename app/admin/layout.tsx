@@ -53,8 +53,8 @@ export default function AdminLayout({
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-foreground">Loading...</div>
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="text-white">Loading...</div>
       </div>
     )
   }
@@ -64,22 +64,22 @@ export default function AdminLayout({
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-black">
       <Navbar />
       <div className="flex">
         <Sidebar />
-        <main className="flex-1 lg:ml-64">
-          <div className="max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+        <main className="flex-1 lg:ml-60">
+          <div className="max-w-7xl px-6 py-8">
             {/* Admin Header with Logout */}
-            <div className="mb-6 flex items-center justify-between border-b border-border pb-4">
+            <div className="mb-6 flex items-center justify-between">
               <div>
-                <p className="text-sm text-muted-foreground">
-                  Logged in as: <span className="font-medium text-foreground">{user.email}</span>
+                <p className="text-sm text-gray-400">
+                  Logged in as: <span className="font-medium text-white">{user.email}</span>
                 </p>
               </div>
               <button
                 onClick={handleLogout}
-                className="rounded-md bg-destructive px-4 py-2 text-sm font-medium text-destructive-foreground hover:bg-destructive/90 transition-colors"
+                className="rounded-md bg-white/5 hover:bg-white/10 border border-white/10 hover:border-white/20 px-4 py-2 text-sm font-medium text-white transition-colors"
               >
                 Logout
               </button>

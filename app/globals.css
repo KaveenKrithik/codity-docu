@@ -24,21 +24,21 @@
   }
 
   .dark {
-    /* Codity.ai exact theme - dark background with bright blue accents */
+    /* Pure black background with blue accents */
     --background: 0 0% 0%;
     --foreground: 0 0% 100%;
     --card: 0 0% 0%;
     --card-foreground: 0 0% 100%;
     --primary: 217 91% 60%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 0 0% 15%;
+    --secondary: 0 0% 10%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 15%;
+    --muted: 0 0% 10%;
     --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 15%;
+    --accent: 0 0% 10%;
     --accent-foreground: 0 0% 98%;
-    --border: 0 0% 20%;
-    --input: 0 0% 20%;
+    --border: 0 0% 15%;
+    --input: 0 0% 15%;
     --ring: 217 91% 60%;
   }
 }
@@ -106,158 +106,103 @@ pre code {
   @apply no-underline hover:underline;
 }
 
-/* MDX content styles - Sleek and modern */
+/* MDX content styles - Clean and modern like reference */
 .prose {
   @apply max-w-none;
 }
 
 .prose h1 {
-  @apply text-5xl font-bold mb-10 mt-0 tracking-tight;
-  background: linear-gradient(135deg, hsl(var(--foreground)) 0%, hsl(var(--foreground) / 0.9) 50%, hsl(var(--primary)) 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  @apply relative;
-}
-
-.prose h1::after {
-  content: '';
-  @apply absolute bottom-0 left-0 w-24 h-1 bg-gradient-to-r from-primary to-primary/0 rounded-full;
+  @apply text-4xl font-bold mb-6 mt-0 tracking-tight text-white;
 }
 
 .prose h2 {
-  @apply text-3xl font-semibold mb-8 mt-16 tracking-tight first:mt-0 text-foreground;
-  @apply pb-3 border-b-2 border-border/30 relative;
-}
-
-.prose h2::before {
-  content: '';
-  @apply absolute bottom-0 left-0 w-16 h-0.5 bg-primary rounded-full;
+  @apply text-2xl font-semibold mb-5 mt-10 tracking-tight first:mt-0 text-white;
 }
 
 .prose h3 {
-  @apply text-2xl font-semibold mb-5 mt-10 tracking-tight text-foreground;
-  @apply relative pl-4;
-}
-
-.prose h3::before {
-  content: '';
-  @apply absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary rounded-full;
+  @apply text-xl font-semibold mb-4 mt-8 tracking-tight text-white;
 }
 
 .prose h4 {
-  @apply text-lg font-semibold mb-3 mt-6 tracking-tight text-foreground;
+  @apply text-lg font-semibold mb-3 mt-6 tracking-tight text-white;
 }
 
 .prose p {
-  @apply mb-6 leading-7 text-foreground/90;
+  @apply mb-5 leading-7 text-gray-300;
 }
 
 .prose ul,
 .prose ol {
-  @apply mb-6 ml-6 space-y-3;
+  @apply mb-5 ml-5 space-y-2;
 }
 
 .prose li {
-  @apply leading-7 text-foreground/90;
-  @apply relative;
+  @apply leading-7 text-gray-300;
 }
 
 .prose ul li::marker {
-  @apply text-primary;
+  @apply text-blue-500;
 }
 
 .prose ol li::marker {
-  @apply text-primary font-semibold;
-}
-
-.prose li > p {
-  @apply mb-2;
+  @apply text-blue-500 font-semibold;
 }
 
 .prose a {
-  @apply text-primary underline underline-offset-4 decoration-primary/50 hover:decoration-primary transition-all;
-  @apply font-medium;
-}
-
-.prose a:hover {
-  @apply text-primary/90;
+  @apply text-blue-500 underline underline-offset-4 decoration-blue-500/50 hover:decoration-blue-500 transition-all;
 }
 
 .prose code {
-  @apply bg-secondary/80 px-2.5 py-1 rounded-lg text-sm font-mono text-foreground;
-  @apply border border-border/40 shadow-sm;
+  @apply bg-white/5 px-2 py-0.5 rounded text-sm font-mono text-blue-400;
+  @apply border border-white/10;
   @apply before:content-[''] after:content-[''];
 }
 
 .prose pre {
-  @apply bg-secondary/60 border border-border/50 rounded-2xl p-6 overflow-x-auto mb-10;
-  @apply shadow-xl shadow-black/10;
-  @apply relative backdrop-blur-sm;
-}
-
-.prose pre::before {
-  content: '';
-  @apply absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-primary/60 via-primary to-primary/60 rounded-t-2xl;
-  @apply shadow-lg shadow-primary/20;
+  @apply bg-white/5 border border-white/10 rounded-lg p-4 overflow-x-auto mb-6;
 }
 
 .prose pre code {
-  @apply bg-transparent p-0 text-sm border-0;
-  @apply text-foreground/95;
+  @apply bg-transparent p-0 text-sm border-0 text-gray-300;
 }
 
 .prose blockquote {
-  @apply border-l-4 border-primary/60 pl-8 italic my-10 text-foreground/85;
-  @apply bg-gradient-to-r from-primary/5 via-secondary/20 to-transparent py-5 pr-6 rounded-r-xl;
-  @apply relative shadow-sm;
-}
-
-.prose blockquote::before {
-  content: '"';
-  @apply absolute -left-3 -top-1 text-5xl text-primary/20 font-serif leading-none;
+  @apply border-l-4 border-blue-500/60 pl-6 italic my-6 text-gray-400;
+  @apply bg-white/5 py-4 pr-4 rounded-r;
 }
 
 .prose table {
-  @apply w-full border-collapse my-10 rounded-xl overflow-hidden;
-  @apply border border-border/50 shadow-lg;
+  @apply w-full border-collapse my-6 rounded-lg overflow-hidden;
+  @apply border border-white/10;
 }
 
 .prose th,
 .prose td {
-  @apply border border-border px-4 py-3 text-left;
+  @apply border border-white/10 px-3 py-2 text-left;
 }
 
 .prose th {
-  @apply bg-gradient-to-b from-secondary to-secondary/80 font-semibold text-foreground;
-  @apply border-b-2 border-border;
+  @apply bg-white/5 font-semibold text-white;
 }
 
 .prose td {
-  @apply text-foreground/90;
+  @apply text-gray-300;
 }
 
 .prose hr {
-  @apply my-10 border-border/50;
-  @apply relative;
-}
-
-.prose hr::after {
-  content: '';
-  @apply absolute left-1/2 -translate-x-1/2 -top-1 w-12 h-0.5 bg-primary rounded-full;
+  @apply my-8 border-white/10;
 }
 
 .prose strong {
-  @apply font-semibold text-foreground;
+  @apply font-semibold text-white;
 }
 
 .prose em {
-  @apply italic text-foreground/90;
+  @apply italic text-gray-300;
 }
 
-/* Enhanced visual elements */
 .prose img {
-  @apply rounded-xl border border-border/50 shadow-xl my-8 transition-all hover:shadow-2xl hover:scale-[1.01];
+  @apply rounded-lg border border-white/10 my-6;
 }
 
 .prose figure {

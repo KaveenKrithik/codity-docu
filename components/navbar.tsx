@@ -31,54 +31,22 @@ export function Navbar() {
 
   return (
     <>
-      <nav
-        className={`sticky top-0 z-50 w-full border-b transition-all duration-300 ${
-          isScrolled
-            ? 'bg-background/40 backdrop-blur-xl border-border/20 shadow-lg shadow-black/10'
-            : 'bg-background/30 backdrop-blur-lg border-border/20'
-        }`}
-        style={{
-          background: isScrolled
-            ? 'rgba(0, 0, 0, 0.4)'
-            : 'rgba(0, 0, 0, 0.3)',
-          backdropFilter: 'blur(20px) saturate(180%)',
-          WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-        }}
-      >
-        <div className="mx-auto flex h-14 max-w-screen-2xl items-center justify-between px-4 sm:px-6 lg:px-8">
+      <nav className="sticky top-0 z-50 w-full h-14 bg-black border-b border-white/5">
+        <div className="mx-auto flex h-full max-w-screen-2xl items-center justify-between px-6">
           {/* Logo */}
-          <div className="flex items-center gap-6">
-            <Link
-              href="/"
-              className="flex items-center space-x-3 group"
-            >
-              <div className="relative inline-flex items-center space-x-2 py-2">
-                <Image
-                  src="/logo-navbar.svg"
-                  alt="Codity Logo"
-                  width={32}
-                  height={32}
-                  className="w-8 h-8"
-                />
-                <span 
-                  className="font-bold bg-gradient-to-r from-primary via-primary to-primary/80 bg-clip-text text-transparent group-hover:from-white group-hover:via-primary group-hover:to-primary transition-all duration-300"
-                  style={{
-                    fontSize: '1.6rem',
-                    fontWeight: 700,
-                    letterSpacing: '-0.01em',
-                  }}
-                >
-                  Codity
-                </span>
+          <div className="flex items-center gap-8">
+            <Link href="/" className="flex items-center gap-2">
+              <div className="w-6 h-6 rounded bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M7 8L3 12L7 16M17 8L21 12L17 16M14 4L10 20" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
               </div>
+              <span className="text-base font-semibold text-white">Codity</span>
             </Link>
 
             {/* Navigation Links */}
-            <div className="hidden lg:flex items-center gap-1">
-              <Link
-                href="/documentation"
-                className="px-3 py-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition-colors rounded-md hover:bg-primary/10"
-              >
+            <div className="hidden lg:flex items-center">
+              <Link href="/documentation" className="text-sm text-gray-400 hover:text-white transition-colors px-3 py-1">
                 Documentation
               </Link>
             </div>
@@ -88,12 +56,12 @@ export function Navbar() {
           <div className="hidden md:flex flex-1 max-w-md mx-8">
             <button
               onClick={() => setIsSearchOpen(true)}
-              className="w-full flex items-center gap-2 px-3 h-9 rounded-lg border border-border/30 bg-background/20 hover:bg-background/30 text-sm text-muted-foreground hover:text-foreground transition-all backdrop-blur-sm"
+              className="w-full flex items-center gap-2 px-3 h-8 rounded-md bg-white/5 border border-white/10 text-sm text-gray-400 hover:bg-white/10 hover:border-white/20 transition-all"
             >
               <Search className="h-4 w-4 shrink-0" />
               <span className="flex-1 text-left">Search docs...</span>
-              <kbd className="hidden lg:inline-flex h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
-                <span className="text-xs">⌘</span>K
+              <kbd className="hidden lg:inline-flex h-5 select-none items-center gap-0.5 rounded border border-white/10 bg-white/5 px-1.5 font-mono text-[10px] text-gray-400">
+                <span>⌘</span>K
               </kbd>
             </button>
           </div>
@@ -101,8 +69,8 @@ export function Navbar() {
           {/* Actions */}
           <div className="flex items-center gap-3">
             <Link
-              href="https://dashboard.codity.ai"
-              className="hidden sm:inline-flex items-center justify-center rounded-lg text-sm font-medium transition-all h-9 px-4 py-2 bg-transparent hover:bg-primary/10 text-foreground/70 hover:text-foreground border border-border/40 hover:border-primary/40 backdrop-blur-sm active:scale-95"
+              href="/admin"
+              className="hidden sm:inline-flex items-center justify-center rounded-md text-sm font-medium h-8 px-4 bg-white/5 hover:bg-white/10 text-white border border-white/10 hover:border-white/20 transition-all"
             >
               Dashboard
             </Link>
